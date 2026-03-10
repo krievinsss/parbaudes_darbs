@@ -10,20 +10,56 @@ class Order extends Model
 {
     use HasFactory;
 
-    public const STATUSES = ['new', 'processing', 'completed', 'cancelled'];
+    public const STATUSES = [
+        'draft',
+        'submitted',
+        'in_review',
+        'approved',
+        'rejected',
+        'completed',
+    ];
+
+    public const SERVICE_TYPES = [
+        'vacancy_registration',
+        'candidate_selection',
+        'training_request',
+        'employment_support',
+        'layoff_support',
+    ];
+
+    public const EMPLOYMENT_TYPES = [
+        'full_time',
+        'part_time',
+        'fixed_term',
+        'internship',
+        'remote',
+        'hybrid',
+    ];
 
     protected $fillable = [
         'customer_id',
         'user_id',
-        'order_number',
+        'request_number',
+        'service_type',
         'status',
-        'total_amount',
+        'position_title',
+        'vacancies_count',
+        'employment_type',
+        'location',
+        'salary_from',
+        'salary_to',
+        'description',
         'notes',
+        'submitted_at',
+        'processed_at',
     ];
 
     protected function casts(): array {
         return [
-            'total_amount' => 'decimal:2',
+            'salary_from' => 'decimal:2',
+            'salary_to' => 'decimal:2',
+            'submitted_at' => 'datetime',
+            'processed_at' => 'datetime',
         ];
     }
 
@@ -38,6 +74,7 @@ class Order extends Model
     public function scopeFilter(Builder $query, array $filters): Builder {
         return $query
             ->when($filters['status'] ?? null, fn (Builder $q, $status) => $q->where('status', $status))
-            ->when($filters['customer_id'] ?? null, fn (Builder $q, $customerId) => $q->where('customer_id', $customerId));
+            ->when($filters['customer_id'] ?? null, fn (Builder $q, $customerId) => $q->where('customer_id', $customerId))
+            ->when($filters['service_type'] ?? null, fn (Builder $q, $serviceType) => $q->where('service_type', $serviceType));
     }
 }
