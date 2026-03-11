@@ -8,18 +8,22 @@ use Illuminate\Validation\Rule;
 
 class StoreOrderRequest extends FormRequest
 {
-    public function authorize(): bool {
+    public function authorize(): bool
+    {
         return auth()->check();
     }
 
-    public function rules(): array {
+    public function rules(): array
+    {
         return [
-            'customer_id' => ['required', 'integer', 'exists:customers,id'],
+            'customer_id' => auth()->user()->isAdmin()
+                ? ['required', 'integer', 'exists:customers,id']
+                : ['nullable'],
             'request_number' => ['required', 'string', 'max:100', 'unique:orders,request_number'],
             'service_type' => ['required', Rule::in(Order::SERVICE_TYPES)],
             'status' => ['required', Rule::in(Order::STATUSES)],
             'position_title' => ['required', 'string', 'max:255'],
-            'vacancies_count' => ['required', 'integer', 'min:1', 'max:10000'],
+            'vacancies_count' => ['required', 'integer', 'min:1'],
             'employment_type' => ['nullable', Rule::in(Order::EMPLOYMENT_TYPES)],
             'location' => ['nullable', 'string', 'max:255'],
             'salary_from' => ['nullable', 'numeric', 'min:0'],

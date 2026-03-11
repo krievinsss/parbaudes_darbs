@@ -9,12 +9,17 @@ use App\Models\Order;
 
 class OrderApiController extends Controller
 {
-    public function store(StoreOrderRequest $request) {
-        $order = Order::create([
-            ...$request->validated(),
-            'user_id' => auth()->id(),
-        ]);
+    public function store(StoreOrderRequest $request)
+    {
+        $data = $request->validated();
 
+        $data['customer_id'] = auth()->user()->isAdmin()
+            ? $request->validated('customer_id')
+            : auth()->user()->customer_id;
+
+        $data['user_id'] = auth()->id();
+
+        $order = Order::create($data);
         $order->load(['customer', 'user']);
 
         return (new OrderResource($order))

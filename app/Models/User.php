@@ -15,6 +15,7 @@ class User extends Authenticatable
         'email',
         'password',
         'is_admin',
+        'customer_id',
     ];
 
     protected $hidden = [
@@ -22,7 +23,8 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    protected function casts(): array {
+    protected function casts(): array
+    {
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
@@ -30,15 +32,18 @@ class User extends Authenticatable
         ];
     }
 
-    public function orders() {
+    public function orders()
+    {
         return $this->hasMany(Order::class);
     }
 
-    public function customer() {
+    public function customer()
+    {
         return $this->belongsTo(Customer::class);
     }
 
-    public function isAdmin(): bool {
+    public function isAdmin(): bool
+    {
         return (bool) $this->is_admin;
     }
 }

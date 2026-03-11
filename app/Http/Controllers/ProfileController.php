@@ -11,21 +11,15 @@ use Illuminate\View\View;
 
 class ProfileController extends Controller
 {
-    /**
-     * Display the user's profile form.
-     */
-    public function edit(Request $request): View
-    {
+    
+    public function edit(Request $request): View {
         return view('profile.edit', [
             'user' => $request->user(),
         ]);
     }
 
-    /**
-     * Update the user's profile information.
-     */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
-    {
+    
+    public function update(ProfileUpdateRequest $request): RedirectResponse {
         $request->user()->fill($request->validated());
 
         if ($request->user()->isDirty('email')) {
@@ -37,11 +31,8 @@ class ProfileController extends Controller
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
 
-    /**
-     * Delete the user's account.
-     */
-    public function destroy(Request $request): RedirectResponse
-    {
+    
+    public function destroy(Request $request): RedirectResponse {
         $request->validateWithBag('userDeletion', [
             'password' => ['required', 'current_password'],
         ]);

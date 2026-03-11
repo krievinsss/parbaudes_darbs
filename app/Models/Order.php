@@ -77,4 +77,36 @@ class Order extends Model
             ->when($filters['customer_id'] ?? null, fn (Builder $q, $customerId) => $q->where('customer_id', $customerId))
             ->when($filters['service_type'] ?? null, fn (Builder $q, $serviceType) => $q->where('service_type', $serviceType));
     }
+
+    public static function serviceTypeOptions(): array {
+        return [
+            'vacancy_registration' => 'Vakances reģistrācija',
+            'candidate_selection' => 'Kandidātu atlase',
+            'training_request' => 'Apmācību pieprasījums',
+            'employment_support' => 'Nodarbinātības atbalsts',
+            'layoff_support' => 'Atbalsts kolektīvās atlaišanas gadījumā',
+        ];
+    }
+
+    public static function statusOptions(): array {
+        return [
+            'draft' => 'Melnraksts',
+            'submitted' => 'Iesniegts',
+            'in_review' => 'Izskatīšanā',
+            'approved' => 'Apstiprināts',
+            'rejected' => 'Noraidīts',
+            'completed' => 'Pabeigts',
+        ];
+    }
+
+    public static function employmentTypeOptions(): array {
+        return [
+            'full_time' => 'Pilna slodze',
+            'part_time' => 'Nepilna slodze',
+            'fixed_term' => 'Noteikts termiņš',
+            'internship' => 'Prakse',
+            'remote' => 'Attālināti',
+            'hybrid' => 'Hibrīds',
+        ];
+    }
 }
